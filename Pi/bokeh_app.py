@@ -8,7 +8,7 @@ from bokeh.models import ColumnDataSource, Select
 from bokeh.layouts import column
 from bokeh.plotting import figure
 
-LOGFILE = Path("measurements.log")
+LOGFILE = Path("/home/pi/Humidity_Temp_Monitor/measurements.log")
 
 def load_data():
     if not LOGFILE.exists():
