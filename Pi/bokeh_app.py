@@ -46,13 +46,13 @@ src_t = ColumnDataSource(data=dict(ts=[], val=[]))
 src_h = ColumnDataSource(data=dict(ts=[], val=[]))
 src_r = ColumnDataSource(data=dict(ts=[], val=[]))
 
-p1 = figure(x_axis_type="datetime", height=250, title="Temperatur (°C)")
+p1 = figure(x_axis_type="datetime", height=250, title="Temperature (°C)")
 p1.line("ts", "val", source=src_t)
 
-p2 = figure(x_axis_type="datetime", height=250, title="Luftfeuchte (%)")
+p2 = figure(x_axis_type="datetime", height=250, title="Humidity (%)")
 p2.line("ts", "val", source=src_h)
 
-p3 = figure(x_axis_type="datetime", height=250, title="Risiko (0..1)")
+p3 = figure(x_axis_type="datetime", height=250, title="Risk (0..1)")
 p3.line("ts", "val", source=src_r)
 
 def update():
@@ -73,5 +73,5 @@ node_select.on_change("value", change_node)
 update()
 
 curdoc().add_root(column(node_select, p1, p2, p3))
-curdoc().title = "Schimmel Dashboard"
+curdoc().title = "Air Sensor Dashboard"
 curdoc().add_periodic_callback(update, 10_000)
