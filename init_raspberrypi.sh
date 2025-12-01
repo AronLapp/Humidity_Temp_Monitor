@@ -1,7 +1,5 @@
 #!/bin/bash
 set -e
-
-# Zieluser bestimmen: wenn mit sudo gestartet -> SUDO_USER, sonst USER
 TARGET_USER="${SUDO_USER:-$USER}"
 TARGET_HOME=$(getent passwd "$TARGET_USER" | cut -d: -f6)
 
