@@ -22,7 +22,7 @@ def load_data():
         try:
             o = json.loads(line)
             rows.append({
-                "ts": datetime.fromisoformat(o["ts"].replace("Z", "+00:00")),
+                "ts": datetime.fromisoformat(o["ts_local"].replace("Z", "+00:00")),
                 "node": o["node"],
                 "temp": o["temp"],
                 "hum": o["hum"],

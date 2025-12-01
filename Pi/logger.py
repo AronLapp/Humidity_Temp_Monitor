@@ -1,9 +1,11 @@
 from flask import Flask, request
 from datetime import datetime
+from zoneinfo import ZoneInfo
 import json, hashlib, os
 
 app = Flask(__name__)
 
+TZ = ZoneInfo("Europe/Berlin")
 LOGFILE = "measurements.log"
 LAST_HASHFILE = "last_hash.txt"
 
@@ -26,14 +28,15 @@ def risk(temp, hum):
 @app.route("/measurements", methods=["POST"])
 def measurements():
     data = request.get_json(force=True)
-    ts = datetime.utcnow().isoformat() + "Z"
-
+    ts_utc   = datetime.utcnow().replace(tzinfo=ZoneInfo("UTC")).isoformat()
+    ts_local = datetime.now(TZ).isoformat()
     r = risk(float(data["temp"]), float(data["hum"]))
 
     last_hash = load_last_hash()
 
     payload = {
-        "ts": ts,
+        "ts_utc": ts_utc,
+        "ts_local": ts_local,
         "node": data.get("node", "unknown"),
         "temp": float(data["temp"]),
         "hum": float(data["hum"]),
