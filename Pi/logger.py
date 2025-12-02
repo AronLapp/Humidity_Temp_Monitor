@@ -1,7 +1,7 @@
 from flask import Flask, request
 from datetime import datetime
 from zoneinfo import ZoneInfo
-import json, hashlib, os
+import json, hashlib, os, math
 
 app = Flask(__name__)
 
@@ -18,12 +18,35 @@ def save_last_hash(h):
     with open(LAST_HASHFILE, "w") as f:
         f.write(h)
 
+# caluclate dewpoint using magnus formula
+def dew_point(temp_c: float, rh: float) -> float:
+    if rh <= 0:
+        return -100.0
+    a = 17.62
+    b = 243.12
+    gamma = (a * temp_c / (b + temp_c)) + math.log(rh / 100.0)
+    return (b * gamma) / (a - gamma)
+
+# approximate risk of mould based on temp and relative humidity
+# < 55% humidity -> 0
+# detla t = t - dewpoint
+# delta t > 5 °C -> 0
+# detla t <= 1°C -> 1
+# between: linear
+
 def risk(temp, hum):
-    if hum < 60:
+
+    if hum < 55:
         return 0.0
-    if hum > 85:
-        hum = 85
-    return (hum - 60) / 25.0  # 0..1
+    Td = dew_point(temp, hum)
+    delta = temp - Td
+
+    if delta > 5.0:
+        return 0.0
+    if delta <= 1.0:
+        return 1.0
+    
+    return (5.0 - delta) / (5.0 - 1.0)
 
 @app.route("/measurements", methods=["POST"])
 def measurements():
