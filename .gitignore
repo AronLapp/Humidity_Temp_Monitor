@@ -17,3 +17,5 @@ www/*.png
 www/index.html
 
 *.service~
+
+**/*.FCBak
