@@ -5,7 +5,10 @@ from pathlib import Path
 import time
 
 import pandas as pd
+import matplotlib
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+from matplotlib.dates import AutoDateLocator, DateFormatter
 
 LOGFILE = Path("/home/pi/Humidity_Temp_Monitor/measurements.log")
 OUTDIR  = Path("/home/pi/Humidity_Temp_Monitor/www")
@@ -29,7 +32,7 @@ def load_data():
         try:
             o = json.loads(line)
             rows.append({
-                "ts":   datetime.fromisoformat(o["ts_local"]),
+                "ts":   datetime.fromisoformat(o["ts_local"]).replace(tzinfo=None),
                 "node": o["node"],
                 "temp": o["temp"],
                 "hum":  o["hum"],
@@ -44,28 +47,41 @@ def load_data():
     df = pd.DataFrame(rows)
     return df.sort_values("ts")
 
+
 def plot_all(df):
     if df.empty:
         return
 
     nodes = sorted(df["node"].unique())
 
-    for col, fname, ylabel in [
+    configs = [
         ("temp", "temp.png", "Temperature (°C)"),
         ("hum",  "hum.png",  "Humidity (%)"),
         ("risk", "risk.png", "Risk (0..1)"),
-    ]:
-        plt.figure(figsize=(8, 3))
+    ]
+
+    for col, fname, ylabel in configs:
+        fig, ax = plt.subplots(figsize=(8, 3))
+
         for node in nodes:
             dfn = df[df["node"] == node]
-            plt.plot(dfn["ts"], dfn[col], label=node)
-        plt.xlabel("Time")
-        plt.ylabel(ylabel)
-        plt.legend()
-        plt.tight_layout()
-        plt.grid(True, linestyle=":", linewidth=0.5)
-        plt.savefig(OUTDIR / fname)
-        plt.close()
+            ax.plot(dfn["ts"], dfn[col], label=node)
+
+        ax.set_xlabel("Time")
+        ax.set_ylabel(ylabel)
+        ax.legend()
+        ax.grid(True, linestyle=":", linewidth=0.5)
+
+        locator = AutoDateLocator()
+        formatter = DateFormatter("%m-%d %H:%M")
+        ax.xaxis.set_major_locator(locator)
+        ax.xaxis.set_major_formatter(formatter)
+        fig.autofmt_xdate()
+
+        fig.tight_layout()
+        fig.savefig(OUTDIR / fname)
+        plt.close(fig)
+
 
 def write_html():
     html = """<!DOCTYPE html>
