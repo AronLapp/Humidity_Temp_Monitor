@@ -7,7 +7,7 @@
 
 Adafruit_BME280 bme;
 
-const char *serverUrl = "http://192.168.1.105:5000/measurements";
+const char *serverUrl = "http://raspberrypi.local:5000/measurements";
 const char *nodeId = "living_room_1";
 
 const unsigned long MEASUREMENT_INTERVAL_MS = 60UL * 1000UL;
