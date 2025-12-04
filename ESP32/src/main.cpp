@@ -7,9 +7,11 @@
 
 Adafruit_BME280 bme;
 
-const char *serverUrl = "http://192.168.1.107:5000/measurements";
-
+const char *serverUrl = "http://192.168.1.105:5000/measurements";
 const char *nodeId = "living_room_1";
+
+const unsigned long MEASUREMENT_INTERVAL_MS = 60UL * 1000UL;
+unsigned long lastMeasurement = 0;
 
 void setup()
 {
@@ -36,39 +38,31 @@ void setup()
       delay(10);
   }
   Serial.println("BME280 connected");
+
+  lastMeasurement = millis() - MEASUREMENT_INTERVAL_MS;
 }
 
 void loop()
 {
-  const int samples = 60;
+  unsigned long now = millis();
 
-  double sumT = 0.0;
-  double sumH = 0.0;
-  double sumP = 0.0;
-
-  for (int i = 0; i < samples; i++)
+  if (now - lastMeasurement < MEASUREMENT_INTERVAL_MS)
   {
-    float t = bme.readTemperature();
-    float h = bme.readHumidity();
-    float p = bme.readPressure() / 100.0f;
-
-    sumT += t;
-    sumH += h;
-    sumP += p;
-
-    delay(1000);
+    delay(100);
+    return;
   }
+  lastMeasurement = now;
 
-  float avgT = sumT / samples;
-  float avgH = sumH / samples;
-  float avgP = sumP / samples;
+  float t = bme.readTemperature();
+  float h = bme.readHumidity();
+  float p = bme.readPressure() / 100.0f;
 
-  Serial.print("AVG T=");
-  Serial.print(avgT);
-  Serial.print(" °C  AVG rF=");
-  Serial.print(avgH);
-  Serial.print(" %  AVG p=");
-  Serial.print(avgP);
+  Serial.print("T=");
+  Serial.print(t);
+  Serial.print(" °C  rF=");
+  Serial.print(h);
+  Serial.print(" %  p=");
+  Serial.print(p);
   Serial.println(" hPa");
 
   if (WiFi.status() == WL_CONNECTED)
@@ -79,9 +73,9 @@ void loop()
 
     String json = "{";
     json += "\"node\":\"" + String(nodeId) + "\",";
-    json += "\"temp\":" + String(avgT, 2) + ",";
-    json += "\"hum\":" + String(avgH, 2) + ",";
-    json += "\"press\":" + String(avgP, 2);
+    json += "\"temp\":" + String(t, 2) + ",";
+    json += "\"hum\":" + String(h, 2) + ",";
+    json += "\"press\":" + String(p, 2);
     json += "}";
 
     int code = http.POST(json);
