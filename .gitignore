@@ -12,10 +12,10 @@ venv/
 
 *.log
 *.err
+**/last_hash.txt
 
 www/*.png
 www/index.html
 
 *.service~
 
-**/*.FCBak
