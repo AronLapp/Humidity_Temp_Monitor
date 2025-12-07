@@ -71,7 +71,21 @@ static const char *WIFI_PASS = "YOUR_PASSWORD";
 
 After adding the `secrets.h` file, replace the `serverUrl` value with your Raspberry Pi's hosted server address, and give your node a name by changing the `nodeId` variable's value.
 
-## Parts used
+## Hardware Design Rationale
+
+The sensor enclosure is divided into two separate chambers to ensure reliable and unbiased measurements:
+
+- **Chamber 1 – ESP32 + electronics**  
+  This compartment is ventilated to dissipate the ESP32’s self-heating. Active airflow prevents heat buildup that would otherwise influence the sensor readings.
+
+- **Chamber 2 – BME280 sensor**  
+  This compartment is intentionally **not** ventilated. Moving air cools the sensor slightly and would distort temperature and humidity values. The sensor therefore operates in still air, which is required for stable indoor-climate measurements.
+
+The only connection between the chambers is a small cable pass-through located at the bottom of the dividing wall. Since warm air rises, positioning the opening low in the enclosure minimizes thermal leakage from the ESP chamber into the sensor chamber.
+
+This passive separation ensures that the BME280 is not affected by the ESP32’s heat or airflow, resulting in more accurate and repeatable measurements.
+
+## Parts Used
 
 - [JOY-IT NodeMCU ESP32](https://joy-it.net/en/products/SBC-NodeMCU-ESP32)
 - [BME 280 Breakout (any other BME280 Breakout will work just fine)](https://www.reichelt.de/de/de/shop/produkt/entwicklerboards_-_temperatur-_feuchtigkeits-_und_drucksensor_-253982?PROVID=2788)
