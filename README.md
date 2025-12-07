@@ -17,16 +17,16 @@ The Dashboard features:
   <img src="images/example_airmonitoring_ui_2.png" alt="example_airmonitoring_ui_2" width="400" />
 </div>
 
-### What is "Risk" and “Attention”?
+### What are "Risk" and “Attention”?
 
 **Risk** is an indicator for the probability of mould formation indoors. It is calculated as follows:
 
-- If humidity < 55%: Risk = 0
-- If humidity >= 55%:
-  - `delta t` = temperature - dew point
-  - If `delta t` > 5 °C: Risk = 0
-  - If `delta t` <= 1°C: Risk = 1
-  - If `delta t` is between 1°C and 5°C: linear scaling from 0 to 1
+- If humidity < 55%: Risk = 0  
+- If humidity >= 55%:  
+  - `delta t` = temperature – dew point  
+  - If `delta t` > 5 °C: Risk = 0  
+  - If `delta t` <= 1 °C: Risk = 1  
+  - If `delta t` is between 1 °C and 5 °C: linear scaling from 0 to 1  
 
 **Attention** highlights situations that are not yet critical but are trending towards risk, for example rising humidity combined with decreasing dew point distance.
 
@@ -46,18 +46,19 @@ Run the setup script located in the main folder of this repository:
 
 ```bash
 ./init_raspberrypi.sh
+
 ```
 
-Make sure your Raspberry Pi has a network connection
+Make sure your Raspberry Pi has a network connection.
 
 After installation, open the dashboard in your browser:
 `http://<raspberry-pi-ip>:8000/index.html`
 
 ## Setup ESP Boards
 
-ESP32 firmware is located in `ESP32/src/main.cpp`
+ESP32 firmware is located in `ESP32/src/main.cpp`.
 
-To connect the ESP32 sensor stations to WiFi, SSID and Password must be stored in a file. The file `ESP32/include/secrets.h` is intentionally excluded from this repository and must be created manually.
+To connect the ESP32 sensor stations to WiFi, SSID and password must be stored in a file. The file `ESP32/include/secrets.h` is intentionally excluded from this repository and must be created manually.
 
 ### Example configuration of ```secrets.h```
 
@@ -68,7 +69,7 @@ static const char *WIFI_SSID = "YOUR_SSID";
 static const char *WIFI_PASS = "YOUR_PASSWORD";
 ```
 
-after adding the secrets.h file, replace the `serverUrl` value with your rasperry Pi's hosted server address, and give your node a name by changing the `nodeId` variable's value.
+After adding the `secrets.h` file, replace the `serverUrl` value with your Raspberry Pi's hosted server address, and give your node a name by changing the `nodeId` variable's value.
 
 ## Parts used
 
