@@ -23,10 +23,10 @@ The Dashboard features:
 
 - If humidity < 55%: Risk = 0
 - If humidity >= 55%:
-  - `delta t` = temperature - dewpoint
+  - `delta t` = temperature - dew point
   - If `delta t` > 5 °C: Risk = 0
-  - If `detla t` <= 1°C: Risk = 1
-  - If `detla t` is between 1°C and 5°C: linear scaling from 0 to 1
+  - If `delta t` <= 1°C: Risk = 1
+  - If `delta t` is between 1°C and 5°C: linear scaling from 0 to 1
 
 **Attention** highlights situations that are not yet critical but are trending towards risk, for example rising humidity combined with decreasing dew point distance.
 
@@ -57,7 +57,7 @@ After installation, open the dashboard in your browser:
 
 ESP32 firmware is located in `ESP32/src/main.cpp`
 
-To connect the ESP32 sensor stations to to WiFi, SSID and Password must be stored in a file. The file `ESP32/include/secrets.h` is intentionally excluded from this repository and must be created manually.
+To connect the ESP32 sensor stations to WiFi, SSID and Password must be stored in a file. The file `ESP32/include/secrets.h` is intentionally excluded from this repository and must be created manually.
 
 ### Example configuration of ```secrets.h```
 
@@ -68,7 +68,7 @@ static const char *WIFI_SSID = "YOUR_SSID";
 static const char *WIFI_PASS = "YOUR_PASSWORD";
 ```
 
-after adding the secrets.h file, replace the `serverUrl` value with your rasperryPi's hosted server address, and give your node a name by changing the `nodeId` variable's value.
+after adding the secrets.h file, replace the `serverUrl` value with your rasperry Pi's hosted server address, and give your node a name by changing the `nodeId` variable's value.
 
 ## Parts used
 
