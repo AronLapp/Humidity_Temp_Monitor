@@ -48,12 +48,22 @@ def risk(temp, hum):
     
     return (5.0 - delta) / (5.0 - 1.0)
 
+def humidity_attention(hum: float) -> float:
+    # 0 bis 1, ab 55 % langsam ansteigend
+    if hum <= 55:
+        return 0.0
+    if hum >= 75:
+        return 1.0
+    return (hum - 55.0) / (75.0 - 55.0)
+
+
 @app.route("/measurements", methods=["POST"])
 def measurements():
     data = request.get_json(force=True)
     ts_utc   = datetime.utcnow().replace(tzinfo=ZoneInfo("UTC")).isoformat()
     ts_local = datetime.now(TZ).isoformat()
     r = risk(float(data["temp"]), float(data["hum"]))
+    att = humidity_attention(float(data["hum"]))
 
     last_hash = load_last_hash()
 
@@ -65,6 +75,7 @@ def measurements():
         "hum": float(data["hum"]),
         "press": float(data["press"]),
         "risk": r,
+        "attention": att,
         "prev_hash": last_hash,
     }
 

@@ -18,7 +18,7 @@ MAX_LINES = 2000
 
 def load_data():
     if not LOGFILE.exists():
-        return pd.DataFrame(columns=["ts", "node", "temp", "hum", "risk"])
+        return pd.DataFrame(columns=["ts", "node", "temp", "hum", "risk", "attention"])
 
     lines = deque(maxlen=MAX_LINES)
     with LOGFILE.open() as f:
@@ -37,12 +37,13 @@ def load_data():
                 "temp": o["temp"],
                 "hum":  o["hum"],
                 "risk": o.get("risk", 0.0),
+                "attention": o.get("attention", 0.0),
             })
         except Exception:
             pass
 
     if not rows:
-        return pd.DataFrame(columns=["ts", "node", "temp", "hum", "risk"])
+        return pd.DataFrame(columns=["ts", "node", "temp", "hum", "risk", "attention"])
 
     df = pd.DataFrame(rows)
     return df.sort_values("ts")
@@ -58,6 +59,7 @@ def plot_all(df):
         ("temp", "temp.png", "Temperature (°C)"),
         ("hum",  "hum.png",  "Humidity (%)"),
         ("risk", "risk.png", "Risk (0..1)"),
+        ("attention", "attention.png", "Humidity Attention (0..1)"),
     ]
 
     for col, fname, ylabel in plots:
@@ -102,6 +104,8 @@ def write_html():
   <img src="hum.png" alt="Humidity">
   <h2>Risk</h2>
   <img src="risk.png" alt="Risk">
+  <h2>Attention</h2>
+  <img src="attention.png" alt="Attention">
 </body>
 </html>
 """ % datetime.now().strftime("%d.%m.%Y %H:%M:%S")
