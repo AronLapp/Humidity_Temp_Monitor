@@ -54,13 +54,13 @@ def plot_all(df):
 
     nodes = sorted(df["node"].unique())
 
-    configs = [
+    plots = [
         ("temp", "temp.png", "Temperature (°C)"),
         ("hum",  "hum.png",  "Humidity (%)"),
         ("risk", "risk.png", "Risk (0..1)"),
     ]
 
-    for col, fname, ylabel in configs:
+    for col, fname, ylabel in plots:
         fig, ax = plt.subplots(figsize=(8, 3))
 
         for node in nodes:
@@ -78,7 +78,6 @@ def plot_all(df):
         ax.xaxis.set_major_formatter(formatter)
         fig.autofmt_xdate()
 
-        fig.tight_layout()
         fig.savefig(OUTDIR / fname)
         plt.close(fig)
 
@@ -96,7 +95,7 @@ def write_html():
 </head>
 <body>
   <h1>Air monitoring</h1>
-  <p>Stand: %s</p>
+  <p>Generated on: %s</p>
   <h2>Temperature</h2>
   <img src="temp.png" alt="Temperature">
   <h2>Humidity</h2>
