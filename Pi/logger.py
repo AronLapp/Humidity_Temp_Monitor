@@ -29,7 +29,7 @@ def dew_point(temp_c: float, rh: float) -> float:
 
 # approximate risk of mould based on temp and relative humidity
 # < 55% humidity -> 0
-# detla t = t - dewpoint
+# delta t = t - dewpoint
 # delta t > 5 °C -> 0
 # detla t <= 1°C -> 1
 # between: linear
