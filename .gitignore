@@ -19,3 +19,5 @@ www/index.html
 
 *.service~
 
+**/Cad_old/**
+**.FCBak
